@@ -1,0 +1,28 @@
+# Fichiers de credentials et tokens (sensibles)
+credentials.json
+*.pickle
+token_*.json
+
+# Fichiers générés
+rapport_emploi.html
+job_tracker_data.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
