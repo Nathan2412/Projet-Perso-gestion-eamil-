@@ -9,7 +9,7 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-from config import GMAIL_SCOPES, START_DATE
+from config import GMAIL_SCOPES, START_DATE_GMAIL
 
 
 def get_gmail_service(token_file):
@@ -80,7 +80,7 @@ def fetch_gmail_emails(account):
         profile = service.users().getProfile(userId='me').execute()
         email_address = profile.get('emailAddress', account_name)
 
-        query = f"after:{START_DATE}"
+        query = f"after:{START_DATE_GMAIL}"
         results = service.users().messages().list(userId='me', q=query, maxResults=200).execute()
         messages = results.get('messages', [])
 

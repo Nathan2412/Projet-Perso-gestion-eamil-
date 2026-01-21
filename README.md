@@ -19,6 +19,20 @@ Un outil Python pour suivre automatiquement vos emails liés à la recherche d'e
 - **Rapport HTML** : Génère un beau rapport avec liens cliquables
 - **Export JSON** : Sauvegarde les données pour analyse ultérieure
 - **Affichage de l'expéditeur** : Voir qui a envoyé chaque email
+- **Analyse par période dynamique** : Filtrage intelligent basé sur la date (J-2 ou J-4 le lundi)
+
+## 📅 Système de date dynamique
+
+Le script analyse les emails selon une logique de date intelligente :
+
+| Jour actuel | Période analysée | Explication |
+|-------------|------------------|-------------|
+| **Lundi**   | J-4 (vendredi)   | Retourne au vendredi précédent pour ne pas manquer les emails du week-end |
+| **Mardi à Dimanche** | J-2 | Analyse les 2 derniers jours |
+
+### Exemple :
+- Si on est **Lundi 20 janvier**, le script analyse depuis le **Vendredi 16 janvier**
+- Si on est **Mercredi 22 janvier**, le script analyse depuis le **Lundi 20 janvier**
 
 ### 🔜 À venir
 
@@ -76,14 +90,20 @@ La première exécution ouvrira une fenêtre de navigateur pour vous connecter �
 
 ```
 job_tracker/
-├── job_tracker.py        # Script principal
-├── credentials.json      # Identifiants Google (à créer)
-├── token_pro.pickle      # Token Gmail compte Pro (généré automatiquement)
-├── token_perso.pickle    # Token Gmail compte Perso (généré automatiquement)
-├── token_outlook.json    # Token Outlook (généré automatiquement)
-├── rapport_emploi.html   # Rapport HTML généré
-├── job_tracker_data.json # Données exportées
-└── README.md             # Ce fichier
+├── job_tracker.py          # Script principal
+├── config.py               # Configuration (comptes, filtres, catégories, dates)
+├── gmail_handler.py        # Gestion des emails Gmail
+├── outlook_handler.py      # Gestion des emails Outlook
+├── filters.py              # Filtres anti-spam et catégorisation
+├── report.py               # Génération du rapport HTML
+├── lancer_job_tracker.bat  # Lanceur Windows
+├── credentials.json        # Identifiants Google (à créer)
+├── token_pro.pickle        # Token Gmail compte Pro (généré automatiquement)
+├── token_perso.pickle      # Token Gmail compte Perso (généré automatiquement)
+├── token_outlook.json      # Token Outlook (généré automatiquement)
+├── job_tracker_report.html # Rapport HTML généré
+├── job_tracker_data.json   # Données exportées
+└── README.md               # Ce fichier
 ```
 
 ## ⚙️ Configuration
@@ -160,6 +180,12 @@ Ajoutez l'expéditeur dans `BLOCKED_SENDERS` ou les mots-clés dans `PROMO_KEYWO
 Le script cherche les liens des plateformes d'emploi connues. Ajoutez les domaines manquants dans `job_domains` de la fonction `extract_links_from_email()`.
 
 ## 📝 Changelog
+
+### v2.1.0 (21/01/2026)
+- ✨ Système de date dynamique (J-2, ou J-4 le lundi)
+- ✨ Affichage de la période d'analyse au lancement
+- 🔧 Code modularisé en plusieurs fichiers (config, handlers, filters, report)
+- 📚 Documentation mise à jour
 
 ### v2.0.0 (17/01/2026)
 - ✨ Support multi-comptes Gmail + Outlook

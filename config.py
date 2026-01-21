@@ -2,14 +2,73 @@
 Configuration du Job Tracker
 """
 
+from datetime import datetime, timedelta
+
 # Scopes pour Gmail
 GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # Scopes pour Outlook
 OUTLOOK_SCOPES = ['https://graph.microsoft.com/Mail.Read']
 
-# Date de début de recherche
-START_DATE = "2026/01/10"
+
+def get_target_date():
+    """
+    Calcule la date cible pour l'analyse des emails.
+    - Si aujourd'hui est lundi (weekday=0) : retourne vendredi dernier (J-4)
+    - Sinon : retourne J-2
+    
+    Returns:
+        tuple: (date_gmail: str "YYYY/MM/DD", date_outlook: str "YYYY-MM-DD")
+    """
+    today = datetime.now()
+    
+    # Lundi = 0, Mardi = 1, ..., Dimanche = 6
+    if today.weekday() == 0:  # Lundi
+        days_back = 4  # Retour au vendredi précédent
+    else:
+        days_back = 2  # J-2
+    
+    target_date = today - timedelta(days=days_back)
+    
+    # Format pour Gmail (YYYY/MM/DD)
+    date_gmail = target_date.strftime("%Y/%m/%d")
+    # Format pour Outlook (YYYY-MM-DD)
+    date_outlook = target_date.strftime("%Y-%m-%d")
+    
+    return date_gmail, date_outlook
+
+
+def get_date_info():
+    """
+    Retourne les informations de date pour affichage.
+    
+    Returns:
+        dict: Informations sur les dates (aujourd'hui, cible, jours)
+    """
+    today = datetime.now()
+    date_gmail, date_outlook = get_target_date()
+    
+    if today.weekday() == 0:
+        days_back = 4
+        day_name = "lundi"
+        target_day = "vendredi"
+    else:
+        days_back = 2
+        day_name = today.strftime("%A").lower()
+        target_date = today - timedelta(days=days_back)
+        target_day = target_date.strftime("%A").lower()
+    
+    return {
+        'today': today.strftime("%d/%m/%Y"),
+        'today_weekday': day_name,
+        'target_date': date_gmail.replace('/', '-'),
+        'target_weekday': target_day,
+        'days_back': days_back
+    }
+
+
+# Date de début de recherche (calculée dynamiquement)
+START_DATE_GMAIL, START_DATE_OUTLOOK = get_target_date()
 
 # Liste des comptes à surveiller
 ACCOUNTS = [

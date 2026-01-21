@@ -12,11 +12,21 @@ if sys.platform == 'win32':
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 # Imports des modules
-from config import ACCOUNTS, CATEGORIES
+from config import ACCOUNTS, CATEGORIES, get_date_info
 from gmail_handler import fetch_gmail_emails
 from outlook_handler import fetch_outlook_emails
 from filters import is_promotional_email, categorize_email, create_email_summary, clean_email_body, extract_links_from_email
 from report import generate_html_report
+
+
+def display_date_info():
+    """Affiche les informations sur la période d'analyse"""
+    info = get_date_info()
+    print(f"📅 Aujourd'hui: {info['today']} ({info['today_weekday']})")
+    print(f"🔍 Analyse des emails depuis: {info['target_date']} ({info['target_weekday']})")
+    print(f"   → Période: J-{info['days_back']} jours")
+    if info['days_back'] == 4:
+        print("   ℹ️  Lundi détecté: retour au vendredi précédent")
 
 
 def display_email_detail(email):
@@ -51,6 +61,10 @@ def main():
     print("=" * 80)
     print("🔍 JOB TRACKER - Suivi automatique de vos emails emploi")
     print("=" * 80)
+    
+    # Afficher les informations de date
+    display_date_info()
+    print("-" * 80)
 
     all_emails = []
 

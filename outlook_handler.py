@@ -6,7 +6,7 @@ import os
 import msal
 import requests
 
-from config import OUTLOOK_SCOPES, START_DATE
+from config import OUTLOOK_SCOPES, START_DATE_OUTLOOK
 
 
 def get_outlook_token(token_file):
@@ -57,8 +57,7 @@ def fetch_outlook_emails(account):
             return []
 
         headers = {'Authorization': f'Bearer {token}'}
-        date_filter = START_DATE.replace('/', '-')
-        url = f"https://graph.microsoft.com/v1.0/me/messages?$filter=receivedDateTime ge {date_filter}&$top=200"
+        url = f"https://graph.microsoft.com/v1.0/me/messages?$filter=receivedDateTime ge {START_DATE_OUTLOOK}&$top=200"
 
         response = requests.get(url, headers=headers)
         data = response.json()
